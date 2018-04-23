@@ -111,7 +111,7 @@ public class DbModelMysql extends org.waarp.common.database.model.DbModelMysql {
          * WHERE name = ?; # Get a sequence number: UPDATE Sequences SET seq = LAST_INSERT_ID(seq +
          * 1) WHERE name = ?; $seq = $db->LastInsertId();
          */
-        action = "CREATE TABLE Sequences (name VARCHAR(22) NOT NULL PRIMARY KEY," +
+        action = "CREATE TABLE IF NOT EXISTS Sequences (name VARCHAR(22) NOT NULL PRIMARY KEY," +
                 "seq BIGINT NOT NULL)";
         System.out.println(action);
         try {
