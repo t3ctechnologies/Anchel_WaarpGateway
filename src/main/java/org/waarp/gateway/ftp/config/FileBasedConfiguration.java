@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.dom4j.Document;
@@ -831,12 +832,20 @@ public class FileBasedConfiguration extends FtpConfiguration {
 	}
 
 	private boolean loadDirectory() {
-		XmlValue value = hashConfig.get(XML_SERVER_HOME);
-		if (value == null || (value.isEmpty())) {
+		//XmlValue value = hashConfig.get(XML_SERVER_HOME);
+		Properties properties = new Properties();
+		try {
+			properties.load(
+					FileBasedConfiguration.class.getClassLoader().getResourceAsStream("./waarpdb.properties"));
+		} catch (IOException e) {
+			logger.error(e);
+		}
+		String path = properties.getProperty("com.sgs.waarpgateway.home");
+		if (path == null || (path.isEmpty())) {
 			logger.error("Unable to find Home in Config file");
 			return false;
 		}
-		String path = value.getString();
+		//String path = value.getString();
 		File file = new File(path);
 		if (!file.isDirectory()) {
 			logger.error("Home is not a directory in Config file");
@@ -1087,29 +1096,40 @@ public class FileBasedConfiguration extends FtpConfiguration {
 	 */
 	private boolean loadDatabase() {
 		XmlValue value = hashConfig.get(XML_DBDRIVER);
-		if (value == null || (value.isEmpty())) {
+		Properties properties = new Properties();
+		try {
+			properties.load(
+					FileBasedConfiguration.class.getClassLoader().getResourceAsStream("./waarpdb.properties"));
+		} catch (IOException e) {
+			logger.error(e);
+		}
+		String dbdriver = properties.getProperty("com.sgs.waarpdb.driver");
+		String dbserver = properties.getProperty("com.sgs.waarpdb.server");
+		String dbuser = properties.getProperty("com.sgs.waarpdb.user");
+		String dbpasswd = properties.getProperty("com.sgs.waarpdb.pass");
+		if (dbdriver == null || (dbdriver.isEmpty())) {
 			logger.error("Unable to find DBDriver in Config file");
 			DbConstant.gatewayAdmin = new DbAdmin(); // no database support
 		} else {
-			String dbdriver = value.getString();
+			//String dbdriver = value.getString();
 			value = hashConfig.get(XML_DBSERVER);
-			if (value == null || (value.isEmpty())) {
+			if (dbserver == null || (dbserver.isEmpty())) {
 				logger.error("Unable to find DBServer in Config file");
 				return false;
 			}
-			String dbserver = value.getString();
+			//String dbserver = value.getString();
 			value = hashConfig.get(XML_DBUSER);
-			if (value == null || (value.isEmpty())) {
+			if (dbuser == null || (dbuser.isEmpty())) {
 				logger.error("Unable to find DBUser in Config file");
 				return false;
 			}
-			String dbuser = value.getString();
+			//String dbuser = value.getString();
 			value = hashConfig.get(XML_DBPASSWD);
-			if (value == null || (value.isEmpty())) {
+			if (dbpasswd == null || (dbpasswd.isEmpty())) {
 				logger.error("Unable to find DBPassword in Config file");
 				return false;
 			}
-			String dbpasswd = value.getString();
+			//String dbpasswd = value.getString();
 			if (dbdriver == null || dbserver == null || dbuser == null || dbpasswd == null || dbdriver.length() == 0
 					|| dbserver.length() == 0 || dbuser.length() == 0 || dbpasswd.length() == 0) {
 				logger.error("Unable to find Correct DB data in Config file");

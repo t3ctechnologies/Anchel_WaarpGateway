@@ -23,7 +23,7 @@
     <url>https://github.com/waarp/WaarpGatewayFtp</url>
   </scm>
   <licenses>
-    <license>
+    <license> 
       <name>GPL 3.0</name>
       <url>LICENSE.txt</url>
     </license>
